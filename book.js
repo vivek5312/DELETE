@@ -14,7 +14,7 @@ userList.addEventListener('click',useraction);
 
 
 function loadSavedUsers(){
-  axios.get("https://crudcrud.com/api/2295a56be11641e29f70cc6df6f35cea/appointmentData")
+  axios.get("https://crudcrud.com/api/e32f956c2a6347a5a42d0a378bbc99ed/appointmentData")
   .then((response)=>{
     console.log(response);
     for(var i=0;i<response.data.length;i++){
@@ -49,7 +49,7 @@ function onSubmit(e) {
 
     // Update the users array in local storage
    // localStorage.setItem('users', JSON.stringify(users));
-   axios.post("https://crudcrud.com/api/2295a56be11641e29f70cc6df6f35cea/appointmentData",user)
+   axios.post("https://crudcrud.com/api/e32f956c2a6347a5a42d0a378bbc99ed/appointmentData",user)
   .then((response)=>{
     console.log(response);
   })
@@ -59,8 +59,8 @@ function onSubmit(e) {
    
  
   }
-
-   createUserListItem(user);
+  // del(user)
+   createUserListItem(user)
 
     // Clear fields
     nameInput.value = '';
@@ -75,6 +75,7 @@ function createUserListItem(user){
     const li = document.createElement('li');
     li.appendChild(document.createTextNode(`${user.name}: ${user.email}: ${user.phone}`));
     userList.appendChild(li);
+    li.dataset.userId = user._id;
 //create delete button
     const delbtn = document.createElement('button');
     delbtn.className = 'deletebtn';
@@ -91,23 +92,23 @@ function removeItem(e) {
   if (e.target.classList.contains('deletebtn')) {
     if (confirm('Are you sure you want to delete this user?')) {
       const li = e.target.parentElement;
-      const userList = li.parentElement;
-      userList.removeChild(li);
+      const userId = li.dataset.userId; // Fetch the user ID from the data attribute
 
-      // Remove from local storage
-      const id = li.dataset.userId; 
-
-      // Make the DELETE request to the API
-      axios.delete(`https://crudcrud.com/api/2295a56be11641e29f70cc6df6f35cea/appointmentData/${user.id}`)
+      axios.delete(`https://crudcrud.com/api/e32f956c2a6347a5a42d0a378bbc99ed/appointmentData/${userId}`)
         .then((response) => {
           console.log(response);
+          // Remove the list item from the UI
+          li.remove();
         })
         .catch((err) => {
           console.log(err);
         });
     }
+
+      
+    }
   }
-}
+
 
 function useraction(e){
   if (e.target.classList.contains('editbtn')) {
@@ -130,6 +131,16 @@ function useraction(e){
     localStorage.setItem('users', JSON.stringify(users));
   }
 }
+
+
+
+
+  
+
+
+
+
+    
 
 
 
